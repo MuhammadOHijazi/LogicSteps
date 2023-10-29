@@ -28,6 +28,10 @@ class Play:
                         self.new_place = new_p
                         self.player = self.actions.player_move(self.new_place, self.actions.new_state)
                         print("The player should be in the postion:", self.player)
+                    else:
+                        new_p = player
+                        player_column += 1
+                        print("we have been returned to the postion :", new_p)
                 case "r":
                     player_column += 1
                     new_p = (player_row, player_column)
@@ -38,6 +42,10 @@ class Play:
                         self.new_place = new_p
                         self.player = self.actions.player_move(self.new_place, self.actions.new_state)
                         print("The player should be in the postion:", self.player)
+                    else:
+                        new_p = player
+                        player_column -= 1
+                        print("we have been returned to the postion :", new_p)
                 case "w":
                     player_row -= 1
                     new_p = (player_row, player_column)
@@ -48,6 +56,10 @@ class Play:
                         self.new_place = new_p
                         self.player = self.actions.player_move(self.new_place, self.actions.new_state)
                         print("The player should be in the postion:", self.player)
+                    else:
+                        new_p = player
+                        player_row += 1
+                        print("we have been returned to the postion :", new_p)
                 case "s":
                     player_row += 1
                     new_p = (player_row, player_column)
@@ -58,10 +70,18 @@ class Play:
                         self.new_place = new_p
                         self.player = self.actions.player_move(self.new_place, self.actions.new_state)
                         print("The player should be in the postion:", self.player)
+                    else:
+                        new_p = player
+                        player_row -= 1
+                        print("we have been returned to the postion :", new_p)
                 case "q":
-                    print(self.actions.stack)
+                    print("The game has been stopped")
                     return
             if self.state.isfinal(self.actions.new_state):
                 print("You have finish the game\n")
+                print("The states you have been moved on to pass is:\n")
+                for i in range(0,len(self.actions.stack)):
+                    print("\nThe", i, "State\n",self.actions.stack[i])
+
                 return
 
