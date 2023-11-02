@@ -5,83 +5,91 @@ class Play:
         self.actions = actions
         self.state = state
         self.move = ''
-        self.player = self.state.player
 
-    def plays(self, player):
-        player_row, player_column = player
-        while self.move != 'Q':
+    def plays(self):
+        while True:
+            player_row, player_column = self.state.player
             print("The current state is:\n", self.actions.new_state)
-            self.move = input("Enter the place you want to go:\n "
-                              "L for left\n"
-                              "R for Right\n"
+            print("The player place should be in:\n", self.state.player)
+            self.move = input("\nEnter the place you want to go:\n "
+                              "A for left\n"
+                              "D for Right\n"
                               "W for front\n"
                               "S for back\n"
                               "Q for stop the game\n")
+
             match self.move:
-                case "l":
-                    player_column -= 1
-                    new_p = (player_row, player_column)
-                    print("The destination target in this move is :", new_p)
-                    state = self.actions.valid_action(self.actions.new_state, self.player, new_p)
-                    print("The state is :", state)
-                    if state:
-                        self.new_place = new_p
-                        self.player = self.actions.player_move(self.new_place, self.actions.new_state)
-                        print("The player should be in the postion:", self.player)
-                    else:
-                        new_p = player
-                        player_column += 1
-                        print("we have been returned to the postion :", new_p)
-                case "r":
+                case "d":
                     player_column += 1
-                    new_p = (player_row, player_column)
-                    print("The destination target in this move is :", new_p)
-                    state = self.actions.valid_action(self.actions.new_state, self.player, new_p)
-                    print("The state is :", state)
-                    if state:
-                        self.new_place = new_p
-                        self.player = self.actions.player_move(self.new_place, self.actions.new_state)
-                        print("The player should be in the postion:", self.player)
+                    new_possible_positions = (player_row, player_column)
+                    print("You want the player to move to:", new_possible_positions)
+                    check_valid = self.actions.valid_action(self.actions.new_state, new_possible_positions,
+                                                            self.state.player)
+                    if check_valid:
+                        self.state.player = self.actions.player_move(new_possible_positions, self.actions.new_state)
+                        self.state.get_next_state_stack = []
                     else:
-                        new_p = player
                         player_column -= 1
-                        print("we have been returned to the postion :", new_p)
+                        new_possible_positions = (player_row, player_column)
+                        print("This move is non valid")
+                        self.state.player = new_possible_positions
+                        print("the player should return to the place",self.state.player)
+                case "a":
+                    player_column -= 1
+                    new_possible_positions = (player_row, player_column)
+                    print("You want the player to move to:", new_possible_positions)
+                    check_valid = self.actions.valid_action(self.actions.new_state, new_possible_positions,
+                                                            self.state.player)
+                    if check_valid:
+                        self.state.player = self.actions.player_move(new_possible_positions, self.actions.new_state)
+                        self.state.get_next_state_stack = []
+                    else:
+                        player_column += 1
+                        new_possible_positions = (player_row, player_column)
+                        print("This move is non valid")
+                        self.state.player = new_possible_positions
+                        print("the player should return to the place",self.state.player)
                 case "w":
                     player_row -= 1
-                    new_p = (player_row, player_column)
-                    print("The destination target in this move is :", new_p)
-                    state = self.actions.valid_action(self.actions.new_state, self.player, new_p)
-                    print("The state is :", state)
-                    if state:
-                        self.new_place = new_p
-                        self.player = self.actions.player_move(self.new_place, self.actions.new_state)
-                        print("The player should be in the postion:", self.player)
+                    new_possible_positions = (player_row, player_column)
+                    print("You want the player to move to:", new_possible_positions)
+                    check_valid = self.actions.valid_action(self.actions.new_state, new_possible_positions,
+                                                            self.state.player)
+                    if check_valid:
+                        self.state.player = self.actions.player_move(new_possible_positions, self.actions.new_state)
+                        self.state.get_next_state_stack = []
                     else:
-                        new_p = player
-                        player_row += 1
-                        print("we have been returned to the postion :", new_p)
+                        player_column += 1
+                        new_possible_positions = (player_row, player_column)
+                        print("This move is non valid")
+                        self.state.player = new_possible_positions
+                        print("the player should return to the place", self.state.player)
                 case "s":
                     player_row += 1
-                    new_p = (player_row, player_column)
-                    print("The destination target in this move is :", new_p)
-                    state = self.actions.valid_action(self.actions.new_state, self.player, new_p)
-                    print("The state is :", state)
-                    if state:
-                        self.new_place = new_p
-                        self.player = self.actions.player_move(self.new_place, self.actions.new_state)
-                        print("The player should be in the postion:", self.player)
+                    new_possible_positions = (player_row, player_column)
+                    print("You want the player to move to:", new_possible_positions)
+                    check_valid = self.actions.valid_action(self.actions.new_state, new_possible_positions,
+                                                            self.state.player)
+                    if check_valid:
+                        self.state.player = self.actions.player_move(new_possible_positions, self.actions.new_state)
+                        self.state.get_next_state_stack = []
                     else:
-                        new_p = player
                         player_row -= 1
-                        print("we have been returned to the postion :", new_p)
-                case "q":
+                        new_possible_positions = (player_row, player_column)
+                        print("This move is non valid")
+                        self.state.player = new_possible_positions
+                        print("the player should return to the place", self.state.player)
+
+                case _:
                     print("The game has been stopped")
                     return
-            if self.state.isfinal(self.actions.new_state):
-                print("You have finish the game\n")
-                print("The states you have been moved on to pass is:\n")
-                for i in range(0,len(self.actions.stack)):
-                    print("\nThe", i, "State\n",self.actions.stack[i])
-
+            final_check = self.state.isfinal(self.actions.new_state)
+            if final_check:
+                print("The game has been finsih")
                 return
-
+            else:
+                if len(self.actions.neighbors_list) == 0:
+                    print("You have been Lost the game")
+                    return
+                else:
+                    continue

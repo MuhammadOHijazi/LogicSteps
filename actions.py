@@ -6,14 +6,18 @@ class Actions:
     stack = collect.deque()
 
     def __init__(self, state):
+        self.new_stack = []
+        self.next_state = state.grid
         self.new_state = state.grid
+        self.player = state.player
         self.neighbors_list = []
+        self.state = state
         self.player_column = 0
         self.player_row = 0
 
-    @staticmethod
-    def neighbors(cell, board):
-        i, j = cell
+    # get all the neighbors from the cell that send that the player get move to it
+    def get_neighbors(self, player_place, board):
+        i, j = player_place
         neighboring_cells = []
         for y in range(max(i - 1, 0), min(i + 2, len(board))):
             for x in range(max(j - 1, 0), min(j + 2, len(board[0]))):
@@ -22,33 +26,36 @@ class Actions:
                     # check if the cell is valid to move
                     if board[y][x] >= 1:
                         neighboring_cells.append((y, x))
-        return neighboring_cells
 
-    def valid_action(self, board, player, cell):
-        print("Here is the valid action function")
-        self.player_row, self.player_column = player
-        # get all the neighbors of the cell that player stopped in
-        neighbors_list = self.neighbors(player, board)
-        self.neighbors_list = np.array(neighbors_list)
+        self.neighbors_list = np.array(neighboring_cells)
         # print all the neighbors
-        for i in range(0, len(neighbors_list)):
-            print(neighbors_list[i])
+        print("The neighbors for the player place is:\n")
+        for i in range(0, len(self.neighbors_list)):
+            print(self.neighbors_list[i])
+
+    def valid_action(self, board, cell, player_place):
+        # call get_neighbors functions to get all the valid places
+        self.get_neighbors(player_place, board)
+        # for testing call
+        # do the get_next_state function here
+        print("This is an optional moves that could you move")
+        self.state.get_next_state(self.neighbors_list, board)
+
         # check that the move request is valid
-        if cell in neighbors_list:
+        if cell in self.neighbors_list:
             return True
         else:
             return False
 
     # player move is the function that create the new state when we move to a valid cell
     def player_move(self, cell, board):
-        if cell in self.neighbors_list:
-            player_row, player_column = cell
-            player = (player_row, player_column)
-            # change the value of the grid because of the move
-            self.stack.append(board)
-            self.new_state = np.copy(board)
-            self.new_state[player_row][player_column] -= 1
-            print("The new board is\n", self.new_state)
-            return player
+        player_row, player_column = cell
+        player = (player_row, player_column)
+        # change the value of the grid because of the move
+        self.stack.append(board)
+        self.new_state = np.copy(board)
+        self.new_state[player_row][player_column] -= 1
+        print("The new board is\n", self.new_state)
+        return player
 
 
